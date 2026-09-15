@@ -1,2 +1,12 @@
-cd Desktop\Smart-Hospital-Resource-Allocation-System
-notepad .gitignore
+# Compiled program (Windows executable)
+*.exe
+*.out
+*.o
+
+# Data files generated when the program runs
+beds_status.txt
+patient_records.txt
+
+# OS-generated junk files
+Thumbs.db
+.DS_Store
