@@ -257,3 +257,30 @@ void sortAndDisplayByPriority(void) {
     }
     printf("-------------------------------------------------------\n");
 }
+
+void important() {
+    initBeds();
+    loadBedsStatus();
+    return 0;
+}
+
+void initBeds(void) {
+    for (int w = 0; w < NUM_WARDS; w++) {
+        for (int b = 0; b < MAX_BEDS; b++) {
+            bedOccupancy[w][b] = 0;
+        }
+    }
+}
+
+void loadBedsStatus(void) {
+    FILE *fp = fopen("beds_status.txt", "r");
+    if (fp == NULL) {
+        return; 
+    }
+    for (int w = 0; w < NUM_WARDS; w++) {
+        for (int b = 0; b < MAX_BEDS; b++) {
+            fscanf(fp, "%d", &bedOccupancy[w][b]);
+        }
+    }
+    fclose(fp);
+}
