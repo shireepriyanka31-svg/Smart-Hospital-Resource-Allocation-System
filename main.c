@@ -17,6 +17,7 @@ float calcDiscount(int age, float gross);
 void savePatientRecord(int i);
 void displayBedOccupancy();
 void sortAndDisplayByPriority();
+void initBeds();
 
 int wardCapacity[NUM_WARDS] = {20, 10, 10, 5};
 int bedOccupancy[NUM_WARDS][MAX_BEDS] = {0};
@@ -46,12 +47,23 @@ float wardCost[MAX_PATIENTS];
 float grossTotal[MAX_PATIENTS];
 float discount[MAX_PATIENTS];
 float finalAmount[MAX_PATIENTS];
+int   dailyCap[NUM_SPECIALTIES]      = {30, 20, 12, 10};
+int   queueCount[NUM_SPECIALTIES]    = {0, 0, 0, 0};
 
-int findFreeBed(int wIdx);
-int calcWaitTime(int sIdx);
-float calcSurcharge(int urgency, float base);
+
+int findFreeBed(int wardIdx);
+void registerPatient();
+float calcWaitTime(int specialtyIdx);
+float calcSurcharge(int urgency, float fee);
 float calcWardCost(int days, float rate);
 float calcDiscount(int age, float gross);
+int displayBill(int i);
+void sortAndDisplayByPriority();
+void generateReport();
+void saveBedsStatus();
+void loadBedsStatus();
+void savePatientRecord(int i);
+void important();
 
 int main()
 {
@@ -283,4 +295,23 @@ void loadBedsStatus(void) {
         }
     }
     fclose(fp);
+}
+
+float calcWaitTime(int specialtyIdx) {
+    return queueCount[specialtyIdx] * consultTime[specialtyIdx];
+}
+
+float calcSurcharge(int urgency, float fee) {
+    if (urgency == 2) return fee * 0.20f;
+    if (urgency == 3) return fee * 0.50f;
+    return 0.0f;
+}
+
+float calcWardCost(int days, float rate) {
+    return days * rate;
+}
+
+float calcDiscount(int age, float gross) {
+    if (age < 5 || age > 65) return gross * 0.15f;
+    return 0.0f;
 }
