@@ -8,6 +8,12 @@
 
 void registerPatient();
 void displayBill(int i);
+void registerPatient();
+int findFreeBed(int wIdx);
+int calcWaitTime(int sIdx);
+float calcSurcharge(int urgency, float base);
+float calcWardCost(int days, float rate);
+float calcDiscount(int age, float gross);
 void savePatientRecord(int i);
 
 int wardCapacity[NUM_WARDS] = {20, 10, 10, 5};
@@ -180,4 +186,30 @@ int findFreeBed(int wIdx) {
         if (bedOccupancy[wIdx][b] == 0) return b;
     }
     return -1;
+}
+
+int calcWaitTime(int sIdx) {
+    return queueCount[sIdx] * 15;
+}
+
+float calcSurcharge(int urgency, float base) {
+    if (urgency == 2) return base * 0.20f;
+    if (urgency == 3) return base * 0.50f;
+    return 0.0f;
+}
+
+float calcWardCost(int days, float rate) {
+    return days * rate;
+}
+
+float calcDiscount(int age, float gross) {
+    if (age >= 60 || age <= 12) return gross * 0.10f;
+    return 0.0f;
+}
+
+void savePatientRecord(int i) {
+    FILE *file = fopen("patient_records.txt", "a");
+    if (file == NULL) return;
+    fprintf(file, "%s,%d,%d,%.2f\n", patientName[i], patientAge[i], urgencyLevel[i], finalAmount[i]);
+    fclose(file);
 }
