@@ -15,6 +15,7 @@ float calcSurcharge(int urgency, float base);
 float calcWardCost(int days, float rate);
 float calcDiscount(int age, float gross);
 void savePatientRecord(int i);
+void displayBedOccupancy();
 
 int wardCapacity[NUM_WARDS] = {20, 10, 10, 5};
 int bedOccupancy[NUM_WARDS][MAX_BEDS] = {0};
@@ -212,4 +213,21 @@ void savePatientRecord(int i) {
     if (file == NULL) return;
     fprintf(file, "%s,%d,%d,%.2f\n", patientName[i], patientAge[i], urgencyLevel[i], finalAmount[i]);
     fclose(file);
+}
+
+void displayBedOccupancy() {
+    printf("\n---------------- BED OCCUPANCY STATUS ----------------\n");
+    for (int w = 0; w < NUM_WARDS; w++) {
+        int occupied = 0;
+        for (int b = 0; b < wardCapacity[w]; b++) {
+            if (bedOccupancy[w][b] == 1) occupied++;
+        }
+        printf("%s: %d / %d beds occupied\n", wardName[w], occupied, wardCapacity[w]);
+        printf("  Beds: ");
+        for (int b = 0; b < wardCapacity[w]; b++) {
+            printf("%d ", bedOccupancy[w][b]);
+        }
+        printf("\n");
+    }
+    printf("--------------------------------------------------------\n");
 }
