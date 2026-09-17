@@ -6,6 +6,10 @@
 #define MAX_PATIENTS   100
 #define NUM_SPECIALTIES  4
 
+void registerPatient();
+void displayBill(int i);
+void savePatientRecord(int i);
+
 int wardCapacity[NUM_WARDS] = {20, 10, 10, 5};
 int bedOccupancy[NUM_WARDS][MAX_BEDS] = {0};
 char wardName[NUM_WARDS][40] = {
@@ -34,6 +38,12 @@ float wardCost[MAX_PATIENTS];
 float grossTotal[MAX_PATIENTS];
 float discount[MAX_PATIENTS];
 float finalAmount[MAX_PATIENTS];
+
+int findFreeBed(int wIdx);
+int calcWaitTime(int sIdx);
+float calcSurcharge(int urgency, float base);
+float calcWardCost(int days, float rate);
+float calcDiscount(int age, float gross);
 
 int main()
 {
@@ -77,7 +87,7 @@ int main()
     return 0;
 }
 
-void registerPatient(void) {
+void registerPatient() {
     if (patientCount >= MAX_PATIENTS) {
         printf("Patient records are full!\n");
         return;
@@ -146,4 +156,20 @@ void registerPatient(void) {
     patientCount++;
 
     savePatientRecord(i);
+}
+
+void displayBill(int i) {
+    printf("\n================ PATIENT BILL ================\n");
+    printf("Patient Name  : %s\n", patientName[i]);
+    printf("Age           : %d\n", patientAge[i]);
+    printf("Specialty     : %s\n", specialtyName[specialtyIndex[i]]);
+    printf("Base Fee      : $%.2f\n", baseFee[specialtyIndex[i]]);
+    printf("Surcharge     : $%.2f\n", surcharge[i]);
+    printf("Ward Cost     : $%.2f\n", wardCost[i]);
+    printf("Gross Total   : $%.2f\n", grossTotal[i]);
+    printf("Discount      : -$%.2f\n", discount[i]);
+    printf("----------------------------------------------\n");
+    printf("Final Amount  : $%.2f\n", finalAmount[i]);
+    printf("Est. Wait Time: %d mins\n", waitTime[i]);
+    printf("==============================================\n");
 }
