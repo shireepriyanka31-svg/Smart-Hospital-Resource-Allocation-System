@@ -173,3 +173,11 @@ void displayBill(int i) {
     printf("Est. Wait Time: %d mins\n", waitTime[i]);
     printf("==============================================\n");
 }
+
+int findFreeBed(int wIdx) {
+    if (wIdx < 0 || wIdx >= NUM_WARDS) return -1;
+    for (int b = 0; b < wardCapacity[wIdx]; b++) {
+        if (bedOccupancy[wIdx][b] == 0) return b;
+    }
+    return -1;
+}
