@@ -16,6 +16,7 @@ float calcWardCost(int days, float rate);
 float calcDiscount(int age, float gross);
 void savePatientRecord(int i);
 void displayBedOccupancy();
+void sortAndDisplayByPriority();
 
 int wardCapacity[NUM_WARDS] = {20, 10, 10, 5};
 int bedOccupancy[NUM_WARDS][MAX_BEDS] = {0};
@@ -75,10 +76,10 @@ int main()
                 registerPatient();
                 break;
             case 2:
-                printf("Display bed occupancy pending implementation.\n");
+                displayBedOccupancy();
                 break;
             case 3:
-                printf("Triage display pending implementation.\n");
+                sortAndDisplayByPriority();
                 break;
             case 4:
                 printf("Summary report pending implementation.\n");
@@ -230,4 +231,29 @@ void displayBedOccupancy() {
         printf("\n");
     }
     printf("--------------------------------------------------------\n");
+}
+
+void sortAndDisplayByPriority(void) {
+    int order[MAX_PATIENTS];
+    for (int i = 0; i < patientCount; i++) {
+        order[i] = i;
+    }
+
+    for (int a = 0; a < patientCount - 1; a++) {
+        for (int b = 0; b < patientCount - 1 - a; b++) {
+            if (urgencyLevel[order[b]] < urgencyLevel[order[b + 1]]) {
+                int temp = order[b];
+                order[b] = order[b + 1];
+                order[b + 1] = temp;
+            }
+        }
+    }
+
+    printf("\n---------------- PATIENTS BY PRIORITY ----------------\n");
+    for (int k = 0; k < patientCount; k++) {
+        int i = order[k];
+        printf("%d. PAT-%d | %-20s | Urgency Level %d\n",
+               k + 1, 1000 + i + 1, patientName[i], urgencyLevel[i]);
+    }
+    printf("-------------------------------------------------------\n");
 }
