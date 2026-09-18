@@ -18,6 +18,7 @@ void savePatientRecord(int i);
 void displayBedOccupancy();
 void sortAndDisplayByPriority();
 void initBeds();
+void generateReport() ;
 
 int wardCapacity[NUM_WARDS] = {20, 10, 10, 5};
 int bedOccupancy[NUM_WARDS][MAX_BEDS] = {0};
@@ -315,3 +316,51 @@ float calcDiscount(int age, float gross) {
     if (age < 5 || age > 65) return gross * 0.15f;
     return 0.0f;
 }
+
+void generateReport() {
+    int countLevel1 = 0, countLevel2 = 0, countLevel3 = 0;
+    float totalRevenue = 0, totalDiscount = 0;
+    float highestBill = -1;
+    int highestIndex = -1;
+
+    for (int i = 0; i < patientCount; i++) {
+        if (urgencyLevel[i] == 1) countLevel1++;
+        else if (urgencyLevel[i] == 2) countLevel2++;
+        else if (urgencyLevel[i] == 3) countLevel3++;
+
+        totalRevenue  += finalAmount[i];
+        totalDiscount += discount[i];
+
+        if (finalAmount[i] > highestBill) {
+            highestBill = finalAmount[i];
+            highestIndex = i;
+        }
+    }
+
+    printf("\n================ HOSPITAL SUMMARY REPORT ================\n");
+    printf("Total Patients Registered : %d\n", patientCount);
+    printf("  Level 1 (Normal)   : %d\n", countLevel1);
+    printf("  Level 2 (Urgent)   : %d\n", countLevel2);
+    printf("  Level 3 (Critical) : %d\n", countLevel3);
+    printf("Total Revenue Earned       : LKR %.2f\n", totalRevenue);
+    printf("Total Discounts Granted    : LKR %.2f\n", totalDiscount);
+
+    printf("\nBed Occupancy Percentage:\n");
+    for (int w = 0; w < NUM_WARDS; w++) {
+        int occupied = 0;
+        for (int b = 0; b < wardCapacity[w]; b++) {
+            if (bedOccupancy[w][b] == 1) occupied++;
+        }
+        float percent = (occupied * 100.0f) / wardCapacity[w];
+        printf("  %-28s: %.1f%% occupied\n", wardName[w], percent);
+    }
+
+    if (highestIndex != -1) {
+        printf("\nHighest-Paying Patient: %s (LKR %.2f)\n", patientName[highestIndex], highestBill);
+    } else {
+        printf("\nNo patients registered yet.\n");
+    }
+    printf("===========================================================\n");
+}
+
+
