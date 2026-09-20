@@ -19,6 +19,7 @@ void displayBedOccupancy();
 void sortAndDisplayByPriority();
 void initBeds();
 void generateReport() ;
+void saveBedsStatus();
 
 int wardCapacity[NUM_WARDS] = {20, 10, 10, 5};
 int bedOccupancy[NUM_WARDS][MAX_BEDS] = {0};
@@ -363,4 +364,17 @@ void generateReport() {
     printf("===========================================================\n");
 }
 
-
+void saveBedsStatus() {
+    FILE *fp = fopen("beds_status.txt", "w");
+    if (fp == NULL) {
+        printf("Error: could not save bed status!\n");
+        return;
+    }
+    for (int w = 0; w < NUM_WARDS; w++) {
+        for (int b = 0; b < MAX_BEDS; b++) {
+            fprintf(fp, "%d ", bedOccupancy[w][b]);
+        }
+        fprintf(fp, "\n");
+    }
+    fclose(fp);
+}
