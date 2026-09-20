@@ -8,7 +8,6 @@
 
 void registerPatient();
 void displayBill(int i);
-void registerPatient();
 int findFreeBed(int wIdx);
 int calcWaitTime(int sIdx);
 float calcSurcharge(int urgency, float base);
@@ -17,8 +16,7 @@ float calcDiscount(int age, float gross);
 void savePatientRecord(int i);
 void displayBedOccupancy();
 void sortAndDisplayByPriority();
-void initBeds();
-void generateReport() ;
+void generateReport();
 void saveBedsStatus();
 
 int wardCapacity[NUM_WARDS] = {20, 10, 10, 5};
@@ -49,65 +47,6 @@ float wardCost[MAX_PATIENTS];
 float grossTotal[MAX_PATIENTS];
 float discount[MAX_PATIENTS];
 float finalAmount[MAX_PATIENTS];
-int   dailyCap[NUM_SPECIALTIES]      = {30, 20, 12, 10};
-int   queueCount[NUM_SPECIALTIES]    = {0, 0, 0, 0};
-
-
-int findFreeBed(int wardIdx);
-void registerPatient();
-float calcWaitTime(int specialtyIdx);
-float calcSurcharge(int urgency, float fee);
-float calcWardCost(int days, float rate);
-float calcDiscount(int age, float gross);
-int displayBill(int i);
-void sortAndDisplayByPriority();
-void generateReport();
-void saveBedsStatus();
-void loadBedsStatus();
-void savePatientRecord(int i);
-void important();
-
-int main()
-{
-    int choice;
-    do {
-        printf("\n============ SMART HOSPITAL SYSTEM MENU ============\n");
-        printf("1. Register New Patient\n");
-        printf("2. Display Bed Occupancy\n");
-        printf("3. Display Patients by Priority (Triage)\n");
-        printf("4. Generate Summary Report\n");
-        printf("5. Save & Exit\n");
-        printf("======================================================\n");
-        printf("Enter your choice: ");
-
-        if (scanf("%d", &choice) != 1) {
-            printf("Invalid input. Exiting...\n");
-            break;
-        }
-
-        switch (choice) {
-            case 1:
-                registerPatient();
-                break;
-            case 2:
-                displayBedOccupancy();
-                break;
-            case 3:
-                sortAndDisplayByPriority();
-                break;
-            case 4:
-                printf("Summary report pending implementation.\n");
-                break;
-            case 5:
-                printf("Saving state and exiting system...\n");
-                break;
-            default:
-                printf("Invalid choice, please try again.\n");
-        }
-    } while (choice != 5);
-
-    return 0;
-}
 
 void registerPatient() {
     if (patientCount >= MAX_PATIENTS) {
@@ -247,7 +186,7 @@ void displayBedOccupancy() {
     printf("--------------------------------------------------------\n");
 }
 
-void sortAndDisplayByPriority(void) {
+void sortAndDisplayByPriority() {
     int order[MAX_PATIENTS];
     for (int i = 0; i < patientCount; i++) {
         order[i] = i;
@@ -270,52 +209,6 @@ void sortAndDisplayByPriority(void) {
                k + 1, 1000 + i + 1, patientName[i], urgencyLevel[i]);
     }
     printf("-------------------------------------------------------\n");
-}
-
-void important() {
-    initBeds();
-    loadBedsStatus();
-    return 0;
-}
-
-void initBeds(void) {
-    for (int w = 0; w < NUM_WARDS; w++) {
-        for (int b = 0; b < MAX_BEDS; b++) {
-            bedOccupancy[w][b] = 0;
-        }
-    }
-}
-
-void loadBedsStatus(void) {
-    FILE *fp = fopen("beds_status.txt", "r");
-    if (fp == NULL) {
-        return; 
-    }
-    for (int w = 0; w < NUM_WARDS; w++) {
-        for (int b = 0; b < MAX_BEDS; b++) {
-            fscanf(fp, "%d", &bedOccupancy[w][b]);
-        }
-    }
-    fclose(fp);
-}
-
-float calcWaitTime(int specialtyIdx) {
-    return queueCount[specialtyIdx] * consultTime[specialtyIdx];
-}
-
-float calcSurcharge(int urgency, float fee) {
-    if (urgency == 2) return fee * 0.20f;
-    if (urgency == 3) return fee * 0.50f;
-    return 0.0f;
-}
-
-float calcWardCost(int days, float rate) {
-    return days * rate;
-}
-
-float calcDiscount(int age, float gross) {
-    if (age < 5 || age > 65) return gross * 0.15f;
-    return 0.0f;
 }
 
 void generateReport() {
@@ -377,4 +270,46 @@ void saveBedsStatus() {
         fprintf(fp, "\n");
     }
     fclose(fp);
+}
+
+int main() {
+    int choice;
+    do {
+        printf("\n--------------- SMART HOSPITAL SYSTEM --------------\n");
+        printf("   1. Register New Patient\n");
+        printf("   2. Display Bed Occupancy\n");
+        printf("   3. Display Patients by Priority (Triage)\n");
+        printf("   4. Generate Summary Report\n");
+        printf("   5. Save & Exit\n");
+        printf("------------------------------------------------------\n");
+        printf("  Enter your choice: ");
+
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input. Exiting...\n");
+            break;
+        }
+
+        switch (choice) {
+            case 1:
+                registerPatient();
+                break;
+            case 2:
+                displayBedOccupancy();
+                break;
+            case 3:
+                sortAndDisplayByPriority();
+                break;
+            case 4:
+                generateReport();
+                break;
+            case 5:
+                saveBedsStatus();
+                printf("Saving state and exiting system...\n");
+                break;
+            default:
+                printf("Invalid choice, please try again.\n");
+        }
+    } while (choice != 5);
+
+    return 0;
 }
